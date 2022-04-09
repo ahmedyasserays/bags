@@ -10,22 +10,25 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 from pathlib import Path
+import environ 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+env.read_env(env.str(str(BASE_DIR), ".env"))
 import os
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8lcfnoqar$a3g41&^d(2cthiqbgjy55@3xcu++3ic3(!hy_n6n'
+SECRET_KEY = env('SECRET_KEY')
 #SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ["*","company129.herokuapp.com"]
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', cast=list)
 
 
 # Application definition
@@ -40,7 +43,7 @@ INSTALLED_APPS = [
     # app
     'rest_framework',
     'documents',
-    'admins',
+    'admins.apps.AdminsConfig',
     'django_social_share', # for share the documents  
 ]
 
@@ -52,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # file for the serve static files
+    # 'whitenoise.middleware.WhiteNoiseMiddleware', # file for the serve static files
 ]
 
 ROOT_URLCONF = 'bags.urls'
@@ -80,10 +83,7 @@ WSGI_APPLICATION = 'bags.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db()
 }
 
 
@@ -91,20 +91,23 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
+
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -122,17 +125,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# add manual
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-MEDIA_ROOT = os.path.join(BASE_DIR,'static/images/')
 
-MEDIA_URL  = "/images/"
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+STATIC_URL = env("STATIC_URL", cast=str)
+STATIC_ROOT = env("STATIC_ROOT", cast=str)
+
+MEDIA_URL = env("MEDIA_URL", cast=str)
+MEDIA_ROOT = env("MEDIA_ROOT", cast=str)
+SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", cast=bool)
+SECURE_PROXY_SSL_HEADER = env("SECURE_PROXY_SSL_HEADER", cast=tuple, default=None)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -150,3 +151,13 @@ CORS_ORIGIN_WHITELIST = (
   'http://127.0.0.1:8000/',
   'localhost:8000',
 )
+
+from django.contrib import messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'text-info',
+    messages.INFO: 'text-info',
+    messages.SUCCESS: 'text-success',
+    messages.WARNING: 'text-warning',
+    messages.ERROR: 'text-danger',
+}

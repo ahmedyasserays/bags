@@ -379,3 +379,13 @@ i.translation-icon:hover {
   }
 }
 /*# sourceMappingURL=style.css.map */
+
+.low-submit{
+  display: flex;
+  align-items: flex-end;
+  column-gap: 5px;
+}
+
+input, table td{
+  text-transform: none
+}

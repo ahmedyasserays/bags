@@ -3,12 +3,14 @@ import numbers
 from operator import mod
 from xml.dom.minidom import DocumentType
 from django.db import models
+from django.contrib.auth.models import User
 
 import documents
 from datetime import datetime
 
 # Create your models here.
 class uplaodingDocument(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
     documentNumber = models.IntegerField(null=True, default=0)
     DocumentType = models.CharField(max_length=200)
     itemType = models.CharField(max_length=200)
