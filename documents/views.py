@@ -38,7 +38,7 @@ class AdddocumentView(upload_document_permision,CreateView):
         self.request.session['success'] = True
         return reverse('upload_document')
 
-#add advanced company
+#add f company
 class AddfcompanyrecordView(upload_Fcompany_permision,CreateView):
     model = advanceFcompany
     fields =('date','FCompany','depositeAmount','paymentAmount','DepPayDate','NetAmount','details')
@@ -60,7 +60,7 @@ class AddfcompanyrecordView(upload_Fcompany_permision,CreateView):
         self.request.session['success'] = True
         return reverse('create_f_company_record')
 
-
+#search in advanced f company
 class Search_advanced_F_company(view_advanced_f_company_permision,CreateView):
     model = advanceFcompany
     fields = '__all__'
@@ -71,6 +71,7 @@ class Search_advanced_F_company(view_advanced_f_company_permision,CreateView):
         ctx['FCompany'] = f_company.objects.all()
         return ctx
 
+#search in f company
 class Search_F_company(view_advanced_f_company_permision,CreateView):
     model = advanceFcompany
     fields =('date','FCompany','depositeAmount','paymentAmount','DepPayDate','NetAmount','details')
@@ -81,6 +82,7 @@ class Search_F_company(view_advanced_f_company_permision,CreateView):
         ctx['FCompany'] = f_company.objects.all()
         return ctx
 
+#add advanced f company
 class AddadvancedFcompanyView(upload_advancedFcompany_permision,CreateView):
     model = advanceFcompany
     fields = ('date','idComapny','name','recevingNumber','receivingAmount','expenceNumber','expenceAmount','depositeAmount','paymentAmount','DepPayDate','FCompany','RecLink','NetAmount','receiDepPay','details','notes')
@@ -102,6 +104,7 @@ class AddadvancedFcompanyView(upload_advancedFcompany_permision,CreateView):
         self.request.session['success'] = True
         return reverse('create_advanced_f_company')
 
+#show documents
 class DocumentView(view_document_permision,ListView):
     paginate_by = 5
     template_name = "user/documents-page.html"
@@ -110,38 +113,26 @@ class DocumentView(view_document_permision,ListView):
     def get_queryset(self):
         return self.request.user.documents.all()
 
-
+#delete documents
 class DeleteDocument(DeleteView):
     model = uplaodingDocument
     
     def get_success_url(self) -> str:
         return reverse('documents_page')
     
-
+#show advanced f companies
 class AdvancedFcompanyrecordView(view_advanced_f_company_permision,FilterView):
     queryset = advanceFcompany.objects.all()
     template_name = "user/advanced-f-company-report.html"
     context_object_name = "companies"
     filterset_class = Company_filter
 
-
+#show f companies
 class FcompanyrecordView(view_f_company_permision,FilterView):
     queryset = advanceFcompany.objects.all()
     template_name = "user/f-company-report.html"
     context_object_name = "FCompany"
     filterset_class = Company_filter
-
-
-class SearchView(ListView):
-    model = uplaodingDocument
-    template_name = "user/search-or-uploading-page.html"
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['DocumentType'] = new_document.objects.all()
-        ctx['itemType'] = new_item.objects.all()
-        return ctx 
-
 
 #login page
 class login_user(LoginView):
