@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'documents',
     'admins.apps.AdminsConfig',
     'django_social_share', # for share the documents  
+    'django_filters',
 ]
 
 MIDDLEWARE = [

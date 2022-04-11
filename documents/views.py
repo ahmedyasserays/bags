@@ -4,8 +4,9 @@ from admins.models import new_document, new_item, f_company
 from django.views.generic import TemplateView, ListView,CreateView,DeleteView
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
+from django_filters.views import FilterView
 from admins.models import new_document,new_item,f_company
-
+from .filters import Company_filter
 from .mixins import *
 
 
@@ -60,6 +61,25 @@ class AddfcompanyrecordView(upload_Fcompany_permision,CreateView):
         return reverse('create_f_company_record')
 
 
+class Search_advanced_F_company(view_advanced_f_company_permision,CreateView):
+    model = advanceFcompany
+    fields = '__all__'
+    template_name = 'user/search-advanced-f-company-record.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['FCompany'] = f_company.objects.all()
+        return ctx
+
+class Search_F_company(view_advanced_f_company_permision,CreateView):
+    model = advanceFcompany
+    fields =('date','FCompany','depositeAmount','paymentAmount','DepPayDate','NetAmount','details')
+    template_name = 'user/search-f-company-record.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['FCompany'] = f_company.objects.all()
+        return ctx
 
 class AddadvancedFcompanyView(upload_advancedFcompany_permision,CreateView):
     model = advanceFcompany
@@ -98,23 +118,19 @@ class DeleteDocument(DeleteView):
         return reverse('documents_page')
     
 
-
-
-class AdvancedFcompanyrecordView(view_advanced_f_company_permision,ListView):
+class AdvancedFcompanyrecordView(view_advanced_f_company_permision,FilterView):
     queryset = advanceFcompany.objects.all()
     template_name = "user/advanced-f-company-report.html"
     context_object_name = "companies"
+    filterset_class = Company_filter
 
 
-class FcompanyrecordView(view_f_company_permision,ListView):
-    model = advanceFcompany
-    paginate_by = 1
+class FcompanyrecordView(view_f_company_permision,FilterView):
+    queryset = advanceFcompany.objects.all()
     template_name = "user/f-company-report.html"
+    context_object_name = "FCompany"
+    filterset_class = Company_filter
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['FCompany'] = advanceFcompany.objects.all()
-        return ctx  
 
 class SearchView(ListView):
     model = uplaodingDocument

@@ -98,8 +98,12 @@
         <h2>new F-Company record</h2>
       </div>
       <div class="report-btns">
-        <button>Enter new record</button>
-        <button type="button" onClick="getDetails()">find</button>
+        <form action="{% url 'create_advanced_f_company' %}">
+          <button>Enter new record</button>
+        </form>
+        <form action="{% url 'search_advanced_f_company' %}">
+          <button>find</button>
+        </form>
       </div>
       <!-- End Page Title-->
       <div class="text-center">
