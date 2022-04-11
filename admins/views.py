@@ -137,15 +137,3 @@ class AdminDeleteDocument(DeleteView):
         return reverse('admin_documents_report')
 
 
-
-# def admin_documents_report(request):
-#     document = login.objects.all()
-#     context = {'document': document}
-#     return render(request, "admin/admin-documents-report.html" ,context)
-
-
-# def delete(request,id):
-#     customer = login.objects.filter(id=id)
-#     customer.delete()
-#     return render(request,'admin/admin-account-m-report.html')
-
