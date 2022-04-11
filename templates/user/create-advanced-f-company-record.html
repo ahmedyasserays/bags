@@ -1,0 +1,288 @@
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'documents/css/style.css' %}" type="text/css"/>
+    <title>Docs Bags - new F-Company record</title>
+    <script>
+      function payment(){
+        y = document.getElementById('pay').value;
+        z = document.getElementById('dep').value;
+        a = document.getElementById('expenceAmt').value;
+        
+        document.getElementById('net').value = parseInt(z) - parseInt(y);
+        document.getElementById('depPay').value = parseInt(a) - parseInt(y);
+      }
+
+      function getDetails() {
+        id=document.getElementById('usersID').value;
+        fetch(`http://localhost:8000/create-advanced-f-company/${id}/`, {
+          method: 'GET', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          
+          if(data!="0"){
+            deposit=document.getElementById("dep").value=data.depositeAmount
+            payt=document.getElementById("pay").value=data.receiDepPay
+
+            document.getElementById("date").value=data.date
+            document.getElementById("usersName").value=data.name
+            document.getElementById("recevingNumber").value=data.recevingNumber
+
+            document.getElementById("receivingAmount").value=data.receivingAmount
+            document.getElementById("recevingNumber").value=data.recevingNumber
+            document.getElementById("expenceNumber").value=data.expenceNumber
+            document.getElementById("expenceAmt").value=data.expenceAmount
+            document.getElementById("dep").value=data.depositeAmount
+            document.getElementById("pay").value=payt
+            document.getElementById("debPayDate").value=data.DepPayDate
+            document.getElementById("fCom").value=data.FCompany
+            document.getElementById("reclink").value=data.RecLink
+            document.getElementById("net").value=deposit-payt
+            document.getElementById("depPay").value=data.receiDepPay
+            document.getElementById("details").value=data.details
+            document.getElementById("notes").value=data.notes
+          }
+          else{
+            alert('Could not find data with this id')
+            window.location.reload()
+          }
+        })
+      }
+    </script>
+
+    <script>
+      function getUsersName(){
+        id=document.getElementById("usersID").value
+        
+        fetch(`https://company129.herokuapp.com/create-advanced-f-company/${id}/${"fromadmin"}/`, {
+          method: 'GET', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          
+          if(data!="0"){
+            document.getElementById("date").value=data.date
+            document.getElementById("usersName").value=data.name
+          }
+          else{
+            alert('Could not find data with this id')
+            window.location.reload()
+          }
+        })
+
+      }
+    </script>
+
+
+  </head>
+  <body> <i class="fa fa-language translation-icon"></i>
+    <div class="text-center my-1 header"> 
+      <h1 class="bg-primary p-2 px-5 text-white d-inline-block">DocBags <small>1.0</small></h1>
+    </div>
+    <!-- start content-->
+    <div class="container">
+      <!-- Start Page Title-->
+      <div class="page-header mt-1">
+        <h2>new F-Company record</h2>
+      </div>
+      <div class="report-btns">
+        <button>Enter new record</button>
+        <button type="button" onClick="getDetails()">find</button>
+      </div>
+      <!-- End Page Title-->
+      <div class="text-center">
+        {% for msg in messages %}
+          <div class="text-danger">{{msg}}</div>
+        {% endfor %}
+      </div>
+      <!-- start form-->
+      <form class="mt-3" method="post" action="">
+        {{form.errors}}
+        {% csrf_token %}
+        <div class="row"> 
+          <div class="col-md-10 mx-auto">
+            <div class="row"> 
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">date</label>
+                  <input class="form-control" type="date" id="date" placeholder="dd-mm-yyyy" name="date" required/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">id</label>
+                  <input class="form-control" id="usersID" onfocusout="getUsersName()" type="text" name="idComapny"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">name</label>
+                  <input class="form-control" type="text" id="usersName" name="name"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">receiving number</label>
+                  <input class="form-control" type="text" id="recevingNumber" name="recevingNumber"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">receiving amount</label>
+                  <input class="form-control" id="receivingAmount" type="text" name="receivingAmount"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">expenses number</label>
+                  <input class="form-control" id="expenceNumber" type="text" name="expenceNumber"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">expenses amount</label>
+                  <input class="form-control" type="text" name="expenceAmount" id="expenceAmt" onkeyup="payment(this.value)"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">deposit amount</label>
+                  <input class="form-control" type="text" name="depositeAmount" onkeyup="payment(this.value)" id="dep">
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">payment amount</label>
+                  <input class="form-control" type="text" name="paymentAmount" onkeyup="payment(this.num)" id="pay"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">(dep / pay) date</label>
+                  <input class="form-control" type="date" id="debPayDate" placeholder="dd-mm-yyyy" name="DepPayDate" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">F-Company</label>
+                  <select  name="FCompany" class="form-control" id="fcom">
+                    <option >Choose FCompany</option>
+                    {% for f_company in FCompany %} 
+                    <option value="{{f_company.id}}" name="FCompany" >{{f_company.company}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">rec links</label>
+                  <input class="form-control" type="text" id="reclink" name="RecLink"/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">the net</label>
+                  <input class="form-control" type="text" name="NetAmount" id="net" readonly/>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">the receits VS dep pay net</label>
+                  <input class="form-control" type="text" name="receiDepPay" readonly id="depPay"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">details</label>
+                  <textarea class="form-control" rows="5" id="details" name="details"></textarea>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="mb-3">
+                  <label class="form-label">notes</label>
+                  <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
+                </div>
+              </div>
+            </div>
+            <div> 
+              <button class="btn btn-warning"><i class="fa fa-save"></i> submit</button>
+              <button class="btn btn-outline-danger" type="reset"><i class="fa fa-trash"></i> delete</button>
+            </div>
+            <div class="text-center">
+              <nav class="mt-3" aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#"><i class="fa fa-chevron-left"></i> Previous </a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next <i class="fa fa-chevron-right"></i> </a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- end form-->
+    </div>
+    <!-- end content-->
+    <!-- start navbar-->
+    <nav class="custom-navigation-bar">
+      <div class="container">
+        <ul class="links-list">
+          <li><a href="/upload-document"><i class="fa fa-upload"></i> <span>uploading documnets</span></a></li>
+          <li><a href="/admins/logout"><i class="fa fa-sign-in"></i> <span>logout</span></a></li>
+          <li><a href="/documents-page"><i class="fa fa-file-alt"></i> <span>documnets page</span></a></li>
+          <li> 
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-money-check-alt"></i> <span>F-Company operations</span> </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/create-f-company-record">new F-Company record</a></li>
+                <li><a class="dropdown-item" href="/create-advanced-f-company">advanced new F-Company record</a></li>
+                <li><a class="dropdown-item" href="/f-company-report">F-Company account report</a></li>
+                <li><a class="dropdown-item" href="/advanced-f-company-report">advanced F-Company account report</a></li>
+          <li><a href="/admins/logout"><i class="fa fa-sign-in"></i> <span>logout</span></a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- end navbar-->
+    <!-- start scripts-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/843d6783ff.js" crossorigin="anonymous"> </script>
+    <script>
+      document.getElementById('datepicker').innerHTML=now.format("dd/MM/yy"); 
+    </script>
+        {% if success %}
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+          Swal.fire(
+            'Advanced F-company Added', 
+            '',
+            'success'
+          )
+        </script>
+        {% endif %}
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
