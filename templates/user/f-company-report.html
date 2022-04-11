@@ -35,7 +35,7 @@
             <li onclick="selectAll()"><i class="fa fa-check-double" ></i> <span>select all</span></li>
             <li><i class="fa fa-file-import" type="file" id="excel-file"></i> <span>import</span></li>
             <li><i class="fa fa-file-export" onclick="exportTableToExcel('tblData','members-data')"></i> <span onclick="exportTableToExcel('tableID','members-data')"> export</span></li>
-            <li><i class="fa fa-share"></i> <span href="{% url 'documents_page' 'sharedoc' %}" name="shareTheDoc" onclick="shareDoc()">share</span></li>
+            <li><i class="fa fa-share"></i> <span href="#" name="shareTheDoc" onclick="shareDoc()">share</span></li>
             {% if sharedoc %}
            <li name="shareTheDoc shareDoc" style="display: none;"><i class="fab fa-facebook">{% post_to_facebook object_or_url "Post to Facebook!" %}</i>
            </li>
@@ -68,15 +68,15 @@
               </tr>
             </thead>
             <tbody>
-              {% for newFCompany in users %}
+              {% for newFCompany in FCompany %}
               <tr>
                 <td name="selectCheckbox"><input name="selectCheckbox" type="checkbox"  id="checkboxes"></td>
                 <td name="selectCheckbox">{{newFCompany.date}}</td>
-                <td name="selectCheckbox">{{newFCompany.DepPAyDate}}</td>
+                <td name="selectCheckbox">{{newFCompany.DepPayDate}}</td>
                 <td name="selectCheckbox">{{ newFCompany.FCompany}}</td>
-                <td name="selectCheckbox"class="deposit">{{ newFCompany.depostieAmount}}</td>
-                <td name="selectCheckbox"class="payment">{{ newFCompany.paymenetAmount}}</td>
-                <td name="selectCheckbox">{{newFCompany.netAmount}}</td>
+                <td name="selectCheckbox"class="deposit">{{ newFCompany.depositeAmount}}</td>
+                <td name="selectCheckbox"class="payment">{{ newFCompany.paymentAmount}}</td>
+                <td name="selectCheckbox">{{newFCompany.NetAmount}}</td>
                 <td name="selectCheckbox">{{newFCompany.balance}}</td>
                 <td name="selectCheckbox">{{newFCompany.id}}</td>
               </tr>

@@ -109,6 +109,7 @@
       </div>
       <!-- start form-->
       <form class="mt-3" method="post" action="">
+        {{form.errors}}
         {% csrf_token %}
         <div class="row"> 
           <div class="col-md-10 mx-auto">
@@ -176,7 +177,12 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">F-Company</label>
-                  <input class="form-control" type="text" id="fCom" name="FCompany"/>
+                  <select  name="FCompany" class="form-control" id="fcom">
+                    <option >Choose FCompany</option>
+                    {% for f_company in FCompany %} 
+                    <option value="{{f_company.id}}" name="FCompany" >{{f_company.company}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
@@ -259,6 +265,16 @@
     <script>
       document.getElementById('datepicker').innerHTML=now.format("dd/MM/yy"); 
     </script>
+        {% if success %}
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+          Swal.fire(
+            'Advanced F-company Added', 
+            '',
+            'success'
+          )
+        </script>
+        {% endif %}
   </body>
 </html>
 

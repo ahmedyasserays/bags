@@ -59,6 +59,7 @@
       </div>
       <!-- start form-->
       <form class="mt-3" method="post" action="" enctype="multipart/form-data">
+        {{ form.errors }}
         {% csrf_token %}
         <div class="row"> 
           <div class="col-md-6 mx-auto">
@@ -66,7 +67,7 @@
               <div class="col-md-6"> 
                 <div class="mb-3">
                   <label class="form-label">document number</label>
-                  <input class="form-control" type="text" id="docID" name="documentNumber"/>
+                  <input class="form-control" type="number" id="docID" name="documentNumber"/>
                 </div>
               </div>
               <div class="col-md-6"> 
@@ -75,8 +76,8 @@
                   <!-- <input class="form-control" type="text" name="DocumentType"/> -->
                   <select  name="DocumentType" class="form-control" id="docType">
                     <option >Choose a Document type</option>
-                    {% for new_document in type %} 
-                    <option value="{{new_document.document}}" name="DocumentType" >{{new_document.document}}</option>
+                    {% for new_document in DocumentType %} 
+                    <option value="{{new_document.id}}" name="DocumentType" >{{new_document.document}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -87,8 +88,8 @@
                   <!-- <input class="form-control" type="text" name="itemType"/> -->
                   <select name="itemType" class="form-control" id="itemsType">
                     <option >Choose a item type</option>
-                    {% for new_item in item %} 
-                    <option value="{{new_item.Item}}" name="itemType" >{{new_item.Item}}</option>
+                    {% for new_item in itemType %} 
+                    <option value="{{new_item.id}}" name="itemType" >{{new_item.Item}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -147,5 +148,15 @@
             $( "#docDate" ).datepicker("show");
          });
     </script>
+    {% if success %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      Swal.fire(
+        'Document Added', 
+        '',
+        'success'
+      )
+    </script>
+    {% endif %}
   </body>
 </html>

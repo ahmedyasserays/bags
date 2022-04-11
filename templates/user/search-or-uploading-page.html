@@ -20,6 +20,7 @@
       <!-- End Page Title-->
       <!-- start form-->
       <form class="mt-3">
+        {{form.errors}}
         <div class="row"> 
           <div class="col-md-6 mx-auto">
             <div class="row"> 
@@ -30,12 +31,22 @@
               </div>
               <div class="col-md-5"> 
                 <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="document type"/>
+                  <select  name="DocumentType" class="form-control" id="docType">
+                    <option >Choose a Document type</option>
+                    {% for new_document in DocumentType %} 
+                    <option value="{{new_document.id}}" name="DocumentType" >{{new_document.document}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
               <div class="col-md-5"> 
                 <div class="mb-3">
-                  <input class="form-control" type="text" placeholder="item type"/>
+                  <select name="itemType" class="form-control" id="itemsType">
+                    <option >Choose a item type</option>
+                    {% for new_item in itemType %} 
+                    <option value="{{new_item.id}}" name="itemType" >{{new_item.Item}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
             </div>

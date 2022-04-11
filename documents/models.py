@@ -1,10 +1,11 @@
+from argparse import ONE_OR_MORE
 from email.policy import default
 import numbers
 from operator import mod
 from xml.dom.minidom import DocumentType
 from django.db import models
 from django.contrib.auth.models import User
-
+from admins.models import f_company,new_document,new_item
 import documents
 from datetime import datetime
 
@@ -12,39 +13,32 @@ from datetime import datetime
 class uplaodingDocument(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
     documentNumber = models.IntegerField(null=True, default=0)
-    DocumentType = models.CharField(max_length=200)
-    itemType = models.CharField(max_length=200)
+    DocumentType = models.ForeignKey(new_document,on_delete=models.CASCADE)
+    itemType = models.ForeignKey(new_item,on_delete=models.CASCADE)
     documentDate = models.DateField(default=datetime.today)
     file= models.FileField(upload_to="static/")
-    def __str__(self):
-        return self.DocumentType
     
-class newFCompany(models.Model):
-    date = models.DateField(default=datetime.today)
-    FCompany =models.CharField(max_length=200)
-    depostieAmount = models.IntegerField(null=True,blank=True,default=0)
-    paymenetAmount = models.IntegerField(null=True,blank=True,default=0)
-    DepPAyDate = models.DateField()
-    netAmount = models.IntegerField(null=True,blank=True, default=0)
     def __str__(self):
-        return self.FCompany
+        return str(self.documentNumber)
     
 class advanceFcompany(models.Model):
+    #Fcompany
     date = models.DateField(default=datetime.today)
+    FCompany =models.ForeignKey(f_company,on_delete=models.CASCADE)
+    depositeAmount = models.IntegerField(null=True, default=0,blank=True)
+    paymentAmount = models.IntegerField(null=True, default=0,blank=True)
+    DepPayDate = models.DateField()
+    NetAmount = models.IntegerField(null=True, default=0,blank=True)
+    details = models.TextField(null=True,blank=True)
+    #advanced Fcompany
     idComapny = models.IntegerField(null=True, default=0,blank=True)
-    name =models.CharField(max_length=200)
+    name =models.CharField(max_length=200,null=True,blank=True)
     recevingNumber = models.IntegerField(null=True, default=0,blank=True)
     receivingAmount = models.IntegerField(null=True, default=0,blank=True)
     expenceNumber= models.IntegerField(null=True, default=0,blank=True)
     expenceAmount =models.IntegerField(null=True, default=0,blank=True)
-    depositeAmount = models.IntegerField(null=True, default=0,blank=True)
-    paymentAmount = models.IntegerField(null=True, default=0,blank=True)
-    DepPayDate = models.DateField()
-    FCompany =models.CharField(max_length=200)
-    RecLink = models.CharField(max_length=200)
-    NetAmount = models.IntegerField(null=True, default=0,blank=True)
-    receiDepPay = models.CharField(max_length=100, null=True)
-    details = models.TextField()
-    notes = models.TextField()
+    RecLink = models.CharField(max_length=200,null=True,blank=True)
+    receiDepPay = models.CharField(max_length=100, null=True,blank=True)
+    notes = models.TextField(null=True,blank=True)
     def __str__(self):
-        return self.FCompany
+        return str(self.FCompany)

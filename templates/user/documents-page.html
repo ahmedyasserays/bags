@@ -23,8 +23,8 @@
       </div>
       <!-- End Page Title-->
       <!-- start form-->
-      {% for uplaodingDocument in users %}
-      <form class="mt-3" >
+      {% for uplaodingDocument in documents %}
+      <div class="mt-3" >
         <div class="row"> 
           <div class="col-md-6 mx-auto">
             <div class="row"> 
@@ -47,8 +47,8 @@
                 <div class="mb-3"> 
                   <div class="document-square">
                     <div class="document-buttons">
-                      <button class="btn btn-warning"  onclick=" printDiv()"><i class="fa fa-print" ></i> print</button>
-                      <a class="btn btn-warning" href="{% url 'documents_page' 'sharedoc' %}"><i class="fa fa-share-alt"></i>  share</a>
+                      <button class="btn btn-warning"  onclick="printPDF('{{uplaodingDocument.file.url}}')"><i class="fa fa-print" ></i> print</button>
+                      <a class="btn btn-warning" href=""><i class="fa fa-share-alt"></i>  share</a>
                       <br>
                       {% if sharedoc %}
                         <button class="btn btn-primary"><span
@@ -63,15 +63,17 @@
                           class="fab fa-reddit-alien">} {% post_to_reddit  object_or_url "Share To Reddit" %}</span>
                         </button>
                       {% endif %}
-
-                      <a class="btn btn-warning" href="{% url 'documents_page' uplaodingDocument.id %}" onclick="delete_document()">
-                        <i class="fa fa-trash-alt"></i> delete
-                      </a>
-                      
+                        <form method="post" action="{% url 'delete_document' uplaodingDocument.id %}">
+                          {% csrf_token %}
+                          <button class="btn btn-warning" >
+                            <i class="fa fa-trash-alt"></i> delete
+                          </button>
+                        </form>
+                          
                     </div>
                     <div class="zoom-icons" > <i class="fa fa-search-minus btn-minimize" onclick="zoomout()" ></i>
                       <i class="fa fa-search-plus" onclick="zoom()"></i></div> 
-                      <embed id="container" src="../../static/images/{{uplaodingDocument.file}}" type="application/pdf">
+                      <embed id="container" src="{{uplaodingDocument.file.url }}" type="application/pdf">
                       
                         <!-- <img src="../../static/images/{{uplaodingDocument.file}}" type="application/pdf" alt="" /> -->
                   </div>
@@ -88,26 +90,26 @@
             </div> -->
           </div>
         </div>
-      </form>
+      </div>
       {% endfor %}
       <!-- end form-->
     </div>
  <!-- pagintion in documents with numbers -->
   <ul class="pagination">
-    {% if users.has_previous %}
-      <li><a href="?page={{users.previous_page_number }}">&laquo;</a></li>
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{page_obj.previous_page_number }}">&laquo;</a></li>
     {% else %}
       <li class="disabled"><span>&laquo;</span></li>
     {% endif %}
-    {% for i in users.paginator.page_range %}
-      {% if users.number == i %}
+    {% for i in page_obj.paginator.page_range %}
+      {% if page_obj.number == i %}
         <li class="active mx-2 h-20"><span style="margin-left: 2%;">{{ i }} <span class="sr-only">(current)</span></span></li>
       {% else %}
         <li class="mx-1"><a href="?page={{ i }}">{{ i }}</a></li>
       {% endif %}
     {% endfor %}
-    {% if users.has_next %}
-      <li><a href="?page={{users.next_page_number }}">&raquo;</a></li>
+    {% if page_obj.has_next %}
+      <li><a href="?page={{page_obj.next_page_number }}">&raquo;</a></li>
     {% else %}
       <li class="disabled"><span>&raquo;</span></li>
     {% endif %}
@@ -136,11 +138,7 @@
       </div>
     </nav>
 
-    <script>
-      function delete_document() {
-        alert("your documnet has been delted")
-      }
-      </script>
+  
 
     <!-- end navbar-->
     <!-- start scripts-->
@@ -169,17 +167,24 @@
         }
     }
   </script>
+  <script type="text/javascript">
+    function printPDF(pdfUrl) 
+    {
+      console.log("this is wokin4 efew ")
+        var w = window.open(pdfUrl);
+        w.print();
+    }
+    </script>
    <script>
-    function printDiv() {
-      printDiv = function () {
+    function printDiv(e) {
             // Store DIV contents in the variable.
             var div = document.getElementById('container');
             // Create a window object.
             var win = window.open('', '', 'height=700,width=700'); // Open the window. Its a popup window.
             win.document.write(div.outerHTML);     // Write contents in the new window.
-            win.document.close();
+            
             win.print();
-      }
+            win.document.close();
     }
     
 </script>

@@ -28,14 +28,21 @@
               <th scope="col">delete</th>
             </tr>
           </thead>
-          {% for login in document %}
+          {% for document in document %}
           <tbody>
            
             <tr>
-              <td>{{login.email}}</td>
-              <td>{{login.document}}</td>
+              {% if document.user.email %}
+              <td>{{document.user.email}}</td>
+              {% else %}
+              <td>{{document.user.username}}</td>
+              {% endif %}
+              <td>{{document.documentNumber}}</td>
               <td>
-                <button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button>
+                <form method="post" action="{% url 'admin_delete_document' document.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button>
+                </form>
               </td>
             </tr>
             

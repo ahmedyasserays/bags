@@ -64,6 +64,7 @@
       <div class="text-center"></div>
       <!-- start form-->
       <form class="mt-3" method="post" action="">
+        {{ form.errors }}
         {% csrf_token %}  
         <div class="row"> 
           <div class="col-md-8 mx-auto">
@@ -81,8 +82,8 @@
                   <!-- <input class="form-control" name="FCompany" type="text" id="fcom"/> -->
                   <select  name="FCompany" class="form-control" id="fcom">
                     <option >Choose FCompany</option>
-                    {% for f_company in type %} 
-                    <option value="{{f_company.company}}" name="FCompany" >{{f_company.company}}</option>
+                    {% for f_company in FCompany %} 
+                    <option value="{{f_company.id}}" name="FCompany" >{{f_company.company}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -102,7 +103,7 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">(dep / pay) date</label>
-                  <input class="form-control" name="DepPAyDate" type="date" id="deppaydate" required/>
+                  <input class="form-control" name="DepPayDate" type="date" id="deppaydate" required/>
                 </div>
               </div>
               <div class="col-md-6"> 
@@ -161,5 +162,15 @@
     <!-- start scripts-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/843d6783ff.js" crossorigin="anonymous"> </script>
+    {% if success %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      Swal.fire(
+        'F-company Added', 
+        '',
+        'success'
+      )
+    </script>
+    {% endif %}
   </body>
 </html>

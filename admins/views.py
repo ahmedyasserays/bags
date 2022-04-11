@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import TemplateView, View, ListView
+from django.views.generic import TemplateView, View, ListView,DeleteView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.db.models import Count
 from  .models import ID_name, f_company, new_document, new_item, page_acces
 from .mixins import AdminRequiredMixin
 from .forms import UserForm, PagesAccessForm
+from documents.models import uplaodingDocument
 # Create your views here.
 
 # admin login page
@@ -19,6 +20,7 @@ class Login(LoginView):
 
     def get_success_url(self) -> str:
         return reverse('admin_main')
+
 
 
 # admin main page
@@ -108,12 +110,31 @@ class AddIdView(AdminRequiredMixin, View):
         return redirect('admin_main')
 
 # admin account report
-class AccountReportView(ListView):
+class AccountReportView(AdminRequiredMixin,ListView):
     template_name = "admin/admin-account-m-report.html"
     context_object_name = "users"
 
     def get_queryset(self):
         return User.objects.annotate(documents_count=Count("documents")).filter(is_superuser=False)
+
+class DocumentReportView(AdminRequiredMixin,ListView):
+    template_name = "admin/admin-documents-report.html"
+    context_object_name = "document"
+
+    def get_queryset(self):
+        return uplaodingDocument.objects.all()
+
+class AdminDeleteAccount(DeleteView):
+    model = User
+
+    def get_success_url(self) -> str:
+        return reverse('admin_account_report')
+
+class AdminDeleteDocument(DeleteView):
+    model = uplaodingDocument
+    
+    def get_success_url(self) -> str:
+        return reverse('admin_documents_report')
 
 
 

@@ -14,6 +14,10 @@ urlpatterns = [
   path("add-comp", views.AddCompanyView.as_view(), name="add-comp"),
   path("add-id", views.AddIdView.as_view(), name="add-id"),
   path("admin-account-report", views.AccountReportView.as_view(), name="admin_account_report"),
-  path("admin-documents-report" ,views.AccountReportView.as_view(), name="admin_documents_report"),
-  path("admin-account-report/<int:id>", views.AccountReportView.as_view(), name="delete")
+  path("admin-documents-report" ,views.DocumentReportView.as_view(), name="admin_documents_report"),
+  path("admin-account-report/<int:id>", views.AccountReportView.as_view(), name="delete"),
+  path('account/<pk>/delete/',views.AdminDeleteAccount.as_view(),name ='admin_delete_account'),
+  path('admin-documents-report/<pk>/delete/',views.AdminDeleteDocument.as_view(),name ='admin_delete_document'),
+
+
 ]

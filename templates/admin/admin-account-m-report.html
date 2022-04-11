@@ -38,7 +38,10 @@
               <td>{{ user.last_login}}</td>
               <td>{{ user.documents_count }}</td>
               <td>
-                <button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button>
+                <form method="post" action="{% url 'admin_delete_account' user.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button>
+                </form>
               </td>
             </tr>
             {% endfor %}
