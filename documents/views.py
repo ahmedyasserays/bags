@@ -139,6 +139,6 @@ class login_user(LoginView):
     template_name = 'user/login.html'
 
     def get_success_url(self) -> str:
-        return reverse('index')
+        return reverse('documents_page')
 
 

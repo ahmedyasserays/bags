@@ -69,25 +69,24 @@
       <!-- start form-->
       <form class="mt-3" method="get" action="{% url 'f_company_report' %}">
         {{ form.errors }}
-        {% csrf_token %}  
         <div class="row"> 
           <div class="col-md-8 mx-auto">
             <div class="row"> 
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">date</label>
-                  <input class="form-control" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate" required/>
+                  <input class="form-control" type="date" data-name="date" onchange="setName(this)" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   
                   <label class="form-label">F-Company</label>
-                  <!-- <input class="form-control" name="FCompany" type="text" id="fcom"/> -->
-                  <select  name="FCompany" class="form-control" id="fcom">
+                  <!-- <input class="form-control" data-name="FCompany" onchange="setName(this)" type="text" id="fcom"/> -->
+                  <select  data-name="FCompany" onchange="setName(this)" class="form-control" id="fcom">
                     <option >Choose FCompany</option>
                     {% for f_company in FCompany %} 
-                    <option value="{{f_company.id}}" name="FCompany" >{{f_company.company}}</option>
+                    <option value="{{f_company.id}}" data-name="FCompany" onchange="setName(this)" >{{f_company.company}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -95,31 +94,31 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">deposit amount</label>
-                  <input class="form-control"  name="depostieAmount" type="text" onkeyup="payment(this.value)" id="dep"/>
+                  <input class="form-control"  data-name="depositeAmount" onchange="setName(this)" type="text" onkeyup="payment(this.value)" id="dep"/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">payment amount</label>
-                  <input class="form-control" name="paymenetAmount" type="text" onkeyup="payment(this.num)" id="pay" />
+                  <input class="form-control" data-name="paymentAmount" onchange="setName(this)" type="text" onkeyup="payment(this.num)" id="pay" />
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">(dep / pay) date</label>
-                  <input class="form-control" name="DepPayDate" type="date" id="deppaydate" required/>
+                  <input class="form-control" data-name="DepPayDate" onchange="setName(this)" type="date" id="deppaydate"/>
                 </div>
               </div>
               <div class="col-md-6"> 
                 <div class="mb-3">
                   <label class="form-label">details</label>
-                  <textarea class="form-control" rows="5" id="details"></textarea>
+                  <textarea class="form-control" data-name="details" onchange="setName(this)" rows="5" id="details"></textarea>
                 </div>
               </div>
               <div class="col-md-6"> 
                 <div class="mb-3">
                   <label class="form-label">the net</label>
-                  <textarea class="form-control" name="netAmount" rows="5" id="net" readonly></textarea>
+                  <textarea class="form-control" data-name="netAmount" onchange="setName(this)" rows="5" id="net" readonly></textarea>
                 </div>
               </div>
             </div>
@@ -158,6 +157,15 @@
     <!-- start scripts-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/843d6783ff.js" crossorigin="anonymous"> </script>
+    <script>
+      let setName = (el)=>{
+        if (el.value){
+          el.name = el.dataset.name
+        }else{
+          el.name = ""
+        }
+      }
+    </script>
     {% if success %}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
