@@ -114,14 +114,13 @@
       <!-- start form-->
       <form class="mt-3" method="get" action="{% url 'advanced_f_company_report' %}">
         {{form.errors}}
-        {% csrf_token %}
         <div class="row"> 
           <div class="col-md-10 mx-auto">
             <div class="row"> 
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">date</label>
-                  <input class="form-control" type="date" id="date" placeholder="dd-mm-yyyy" name="date" required/>
+                  <input class="form-control" type="date" id="date" placeholder="dd-mm-yyyy" name="date"/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
@@ -175,7 +174,7 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">(dep / pay) date</label>
-                  <input class="form-control" type="date" id="debPayDate" placeholder="dd-mm-yyyy" name="DepPayDate" required />
+                  <input class="form-control" type="date" id="debPayDate" placeholder="dd-mm-yyyy" name="DepPayDate" />
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">

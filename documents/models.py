@@ -23,13 +23,13 @@ class uplaodingDocument(models.Model):
     
 class advanceFcompany(models.Model):
     #Fcompany
-    date = models.DateField(default=datetime.today)
+    date = models.DateField()
     FCompany =models.ForeignKey(f_company,on_delete=models.CASCADE)
-    depositeAmount = models.IntegerField(null=True, default=0,blank=True)
-    paymentAmount = models.IntegerField(null=True, default=0,blank=True)
+    depositeAmount = models.IntegerField()
+    paymentAmount = models.IntegerField()
     DepPayDate = models.DateField()
-    NetAmount = models.IntegerField(null=True, default=0,blank=True)
-    details = models.TextField(null=True,blank=True)
+    NetAmount = models.IntegerField()
+    details = models.TextField()
     #advanced Fcompany
     idComapny = models.IntegerField(null=True, default=0,blank=True)
     name =models.CharField(max_length=200,null=True,blank=True)
