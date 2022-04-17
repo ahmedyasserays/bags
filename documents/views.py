@@ -1,4 +1,6 @@
 # from locale import NOEXPR
+from urllib import request
+from django.http import QueryDict
 from .models import advanceFcompany, uplaodingDocument
 from admins.models import new_document, new_item, f_company
 from django.views.generic import TemplateView, ListView,CreateView,DeleteView
@@ -112,6 +114,21 @@ class DocumentView(view_document_permision,ListView):
 
     def get_queryset(self):
         return self.request.user.documents.all()
+
+
+class F_company_find(view_f_company_permision,FilterView):
+    paginate_by = 1
+    queryset = advanceFcompany.objects.all()
+    template_name = "user/find-f-company.html"
+    context_object_name = "FCompany"
+    filterset_class = Company_filter
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['FCompany'] = f_company.objects.all()
+        ctx['success'] = self.request.session.pop('success', False)
+        return ctx
+
 
 #delete documents
 class DeleteDocument(DeleteView):

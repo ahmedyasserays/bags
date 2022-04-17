@@ -1,4 +1,5 @@
 {% load static %}
+{%load urlparams%}
 <html lang="en">
   <head>
     <meta charset="UTF-8"/>
@@ -54,7 +55,7 @@
     <div class="container">
       <!-- Start Page Title-->
       <div class="page-header mt-1">
-        <h2>Find F-Company record</h2>
+        <h2>new F-Company record</h2>
       </div>
       <div class="report-btns">
         <form action="{% url 'create_f_company_record' %}">
@@ -67,7 +68,7 @@
       <!-- End Page Title-->
       <div class="text-center"></div>
       <!-- start form-->
-      <form class="mt-3" method="get" action="{% url 'find_f_company' %}">
+      <form class="mt-3" method="post" action="">
         {{ form.errors }}
         {% csrf_token %}  
         <div class="row"> 
@@ -76,7 +77,7 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">date</label>
-                  <input class="form-control" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate" required/>
+                  <input class="form-control" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"  required/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
@@ -95,7 +96,7 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">deposit amount</label>
-                  <input class="form-control"  name="depostieAmount" type="text" onkeyup="payment(this.value)" id="dep"/>
+                  <input class="form-control" value="" name="depostieAmount" type="text" onkeyup="payment(this.value)" id="dep"/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
@@ -124,8 +125,16 @@
               </div>
             </div>
             <div> 
-              <button class="btn btn-warning" type="submit"> find</button>
+              <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> submit</button>
               <button class="btn btn-outline-danger" type="reset"><i class="fa fa-trash"></i> delete</button>
+            </div>
+            <div class="text-center">
+              <nav class="mt-3" aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#"><i class="fa fa-chevron-left"></i> Previous </a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next <i class="fa fa-chevron-right"></i> </a></li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>

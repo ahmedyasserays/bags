@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import advanceFcompany, uplaodingDocument, newFCompany
+from .models import advanceFcompany, uplaodingDocument
 
 class advanceFcompanySerializer(serializers.ModelSerializer):
   class Meta:
@@ -16,5 +16,5 @@ class uploadingDocumentSerializer(serializers.ModelSerializer):
 
 class newFCompanySerializer(serializers.ModelSerializer):
   class Meta:
-    model = newFCompany
-    fields = ['date', 'FCompany','depostieAmount','paymenetAmount','DepPAyDate', 'netAmount']
+    model = advanceFcompany
+    fields = ['date', 'FCompany','depositeAmount','paymentAmount','DepPayDate', 'NetAmount']

@@ -14,5 +14,6 @@ urlpatterns = [
     path("create-f-company-record",views.AddfcompanyrecordView.as_view(),name="create_f_company_record"),
     path('search-advanced-f-company/',views.Search_advanced_F_company.as_view(),name = 'search_advanced_f_company'),
     path('search-f-company',views.Search_F_company.as_view(),name='search_f_company'),
+    path('f-company-find/',views.F_company_find.as_view(),name='find_f_company'),
 
 ]
