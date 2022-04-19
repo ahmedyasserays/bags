@@ -1,9 +1,10 @@
 # from locale import NOEXPR
+from operator import mod
 from urllib import request
 from django.http import QueryDict
 from .models import advanceFcompany, uplaodingDocument
 from admins.models import new_document, new_item, f_company
-from django.views.generic import TemplateView, ListView,CreateView,DeleteView
+from django.views.generic import TemplateView, ListView,CreateView,DeleteView,UpdateView
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
 from django_filters.views import FilterView
@@ -62,6 +63,29 @@ class AddfcompanyrecordView(upload_Fcompany_permision,CreateView):
         self.request.session['success'] = True
         return reverse('create_f_company_record')
 
+#update f company
+class update_f_company(view_f_company_permision,UpdateView):
+    model = advanceFcompany
+    fields = '__all__'
+    template_name = "user/find-f-company.html"
+
+    
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['success'] = self.request.session.pop('success', False)
+        return ctx
+
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        self.request.session['success'] = True
+        return reverse('update-f-company')
+
+
 #search in advanced f company
 class Search_advanced_F_company(view_advanced_f_company_permision,CreateView):
     model = advanceFcompany
@@ -115,7 +139,7 @@ class DocumentView(view_document_permision,ListView):
     def get_queryset(self):
         return self.request.user.documents.all()
 
-
+#f company search filter
 class F_company_find(view_f_company_permision,FilterView):
     paginate_by = 1
     queryset = advanceFcompany.objects.all()
@@ -126,9 +150,9 @@ class F_company_find(view_f_company_permision,FilterView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['FCompany'] = f_company.objects.all()
+        ctx['fcompanies'] = advanceFcompany.objects.all()
         ctx['success'] = self.request.session.pop('success', False)
         return ctx
-
 
 #delete documents
 class DeleteDocument(DeleteView):

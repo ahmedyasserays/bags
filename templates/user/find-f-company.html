@@ -68,7 +68,7 @@
       <!-- End Page Title-->
       <div class="text-center"></div>
       <!-- start form-->
-      <form class="mt-3" method="post" action="">
+      <form class="mt-3" method="put" action="">
         {{ form.errors }}
         {% csrf_token %}  
         <div class="row"> 
@@ -77,12 +77,11 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">date</label>
-                  <input class="form-control" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"  required/>
+                  <input class="form-control" value="" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"  required/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
-                  
                   <label class="form-label">F-Company</label>
                   <!-- <input class="form-control" name="FCompany" type="text" id="fcom"/> -->
                   <select  name="FCompany" class="form-control" id="fcom">
@@ -125,14 +124,42 @@
               </div>
             </div>
             <div> 
-              <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> submit</button>
+              <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> update</button>
               <button class="btn btn-outline-danger" type="reset"><i class="fa fa-trash"></i> delete</button>
             </div>
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+              <li><a href=" {%urlparams%} &page={{page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in page_obj.paginator.page_range %}
+              {% if page_obj.number == i %}
+                <li class="active mx-2 h-20"><span style="margin-left: 2%;">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li class="mx-1"><a href=" {%urlparams%}&page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li><a href="{%urlparams%}*&page={{page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
             <div class="text-center">
               <nav class="mt-3" aria-label="Page navigation example">
                 <ul class="pagination">
+                  {% if page_obj.has_previous %}
+                  <li class="page-item"><a class="page-link" href="{%urlparams%} &page={{page_obj.previous_page_number }}"><i class="fa fa-chevron-left"></i> Previous </a></li>
+                  {% else %}
                   <li class="page-item"><a class="page-link" href="#"><i class="fa fa-chevron-left"></i> Previous </a></li>
+                  {%endif%}
+        
+                  {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="{%urlparams%}*&page={{page_obj.next_page_number }}">Next <i class="fa fa-chevron-right"></i> </a></li>
+                  {% else %}
                   <li class="page-item"><a class="page-link" href="#">Next <i class="fa fa-chevron-right"></i> </a></li>
+                  {%endif%}
                 </ul>
               </nav>
             </div>
@@ -165,13 +192,29 @@
     </nav>
     <!-- end navbar-->
     <!-- start scripts-->
+    <script>
+      let text = '{%urlparams%}'.split('&')
+      res = {}
+      for (i of text){
+        i = i.split('=')
+        res[i[0]]=i[1]
+      }
+      console.log(res);
+      console.log(res['depostieAmount']);
+      document.getElementById('fdate').value = res['?date']
+      document.getElementById('fcom').value = res['amp;FCompany']
+      document.getElementById('dep').value = res['amp;depositeAmount']
+      document.getElementById('pay').value = res['amp;paymentAmount']
+      document.getElementById('deppaydate').value = res['amp;DepPayDate']
+      document.getElementById('details').value = res['amp;details']
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/843d6783ff.js" crossorigin="anonymous"> </script>
     {% if success %}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       Swal.fire(
-        'F-company Added', 
+        ' F-company Added', 
         '',
         'success'
       )
