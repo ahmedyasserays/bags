@@ -15,6 +15,7 @@ urlpatterns = [
     path('search-advanced-f-company/',views.Search_advanced_F_company.as_view(),name = 'search_advanced_f_company'),
     path('search-f-company',views.Search_F_company.as_view(),name='search_f_company'),
     path('f-company-find/',views.F_company_find.as_view(),name='find_f_company'),
-    path('f-company-find/<pk>/update',views.update_f_company.as_view(),name='update-f-company'),
+    path('f-company-find/<pk>/update/',views.update_f_company.as_view(),name='update-f-company'),
+    path('find_document/',views.Find_document.as_view(),name='find_document'),
 
 ]

@@ -29,7 +29,7 @@ class advanceFcompany(models.Model):
     paymentAmount = models.IntegerField()
     DepPayDate = models.DateField()
     NetAmount = models.IntegerField()
-    details = models.TextField()
+    details = models.TextField(null=True, blank=True)
     #advanced Fcompany
     idComapny = models.IntegerField(null=True, default=0,blank=True)
     name =models.CharField(max_length=200,null=True,blank=True)

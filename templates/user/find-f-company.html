@@ -1,12 +1,13 @@
 {% load static %}
 {%load urlparams%}
+{% load mathfilters %}
 <html lang="en">
   <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'documents/css/style.css' %}" type="text/css"/>
-    <title>Docs Bags - new F-Company record</title>
+    <title>Docs Bags - update F-Company record</title>
     <script>
       function payment(){
         y = document.getElementById('pay').value;
@@ -16,35 +17,6 @@
 
       }
 
-
-      function getName() {
-        fcom=document.getElementById('fcom').value;
-        dep=document.getElementById('dep').value;
-        console.log(fcom, dep)
-        fetch(`http://localhost:8000/create-f-company-record/${fcom}/${dep}`, {
-          method: 'GET', // or 'PUT'
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data)
-          
-          if(data!="0"){
-            document.getElementById('fdate').value=data.date
-            document.getElementById('fcom').value=data.FCompany
-            document.getElementById('dep').value=data.depostieAmount
-            document.getElementById('pay').value=data.paymenetAmount
-            document.getElementById('deppaydate').value=data.DepPAyDate
-            document.getElementById('net').value=data.netAmount
-          }
-          else{
-            alert('Could not find data with this id')
-            window.location.reload()
-          }
-        })
-      }
     </script>
   </head>
   <body> <i class="fa fa-language translation-icon"></i>
@@ -55,7 +27,7 @@
     <div class="container">
       <!-- Start Page Title-->
       <div class="page-header mt-1">
-        <h2>new F-Company record</h2>
+        <h2>update F-Company record</h2>
       </div>
       <div class="report-btns">
         <form action="{% url 'create_f_company_record' %}">
@@ -67,17 +39,18 @@
       </div>
       <!-- End Page Title-->
       <div class="text-center"></div>
-      <!-- start form-->
-      <form class="mt-3" method="put" action="">
-        {{ form.errors }}
-        {% csrf_token %}  
+      
+      {%for company in companies%}  
+      <form action="{%url 'update-f-company' company.id %}" method="post">
+        {{form.errors}}
+        {% csrf_token %}
         <div class="row"> 
           <div class="col-md-8 mx-auto">
             <div class="row"> 
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">date</label>
-                  <input class="form-control" value="" type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"  required/>
+                  <input class="form-control" value='{{company.date|date:"Y-m-d"}}' type="date" name="date" placeholder="dd-mm-yyyy" min="01-01-1997" max="31-12-2030" id="fdate"  required/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
@@ -85,9 +58,9 @@
                   <label class="form-label">F-Company</label>
                   <!-- <input class="form-control" name="FCompany" type="text" id="fcom"/> -->
                   <select  name="FCompany" class="form-control" id="fcom">
-                    <option >Choose FCompany</option>
+                    <option disabled hidden >Choose FCompany</option>
                     {% for f_company in FCompany %} 
-                    <option value="{{f_company.id}}" name="FCompany" >{{f_company.company}}</option>
+                    <option value="{{ f_company.id }}" {% if company.FCompany.id == f_company.id %}selected{% endif %}>{{f_company.company}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -95,38 +68,42 @@
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">deposit amount</label>
-                  <input class="form-control" value="" name="depostieAmount" type="text" onkeyup="payment(this.value)" id="dep"/>
+                  <input class="form-control" value="{{company.depositeAmount}}" name="depositeAmount" type="text" onkeyup="payment(this.value)" id="dep"/>
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">payment amount</label>
-                  <input class="form-control" name="paymenetAmount" type="text" onkeyup="payment(this.num)" id="pay" />
+                  <input class="form-control" value="{{company.paymentAmount}}" name="paymentAmount" type="text" onkeyup="payment(this.num)" id="pay" />
                 </div>
               </div>
               <div class="col-md-6 col-lg-4">
                 <div class="mb-3">
                   <label class="form-label">(dep / pay) date</label>
-                  <input class="form-control" name="DepPayDate" type="date" id="deppaydate" required/>
+                  <input class="form-control" value='{{company.DepPayDate|date:"Y-m-d"}}' name="DepPayDate" type="date" id="deppaydate" required/>
                 </div>
               </div>
               <div class="col-md-6"> 
                 <div class="mb-3">
                   <label class="form-label">details</label>
-                  <textarea class="form-control" rows="5" id="details"></textarea>
+                  <textarea class="form-control" name="details" value="{{company.details}}" rows="5" id="details"></textarea>
                 </div>
               </div>
               <div class="col-md-6"> 
                 <div class="mb-3">
                   <label class="form-label">the net</label>
-                  <textarea class="form-control" name="netAmount" rows="5" id="net" readonly></textarea>
+                  <textarea class="form-control" name="NetAmount" rows="5" id="net" readonly>{{company.depositeAmount|sub:company.paymentAmount}}</textarea>
                 </div>
               </div>
             </div>
             <div> 
-              <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> update</button>
-              <button class="btn btn-outline-danger" type="reset"><i class="fa fa-trash"></i> delete</button>
-            </div>
+                <!-- <a href="{%url 'update-f-company' company.id %}"> -->
+                  <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> update</button>
+                <!-- </a> -->
+                <button class="btn btn-outline-danger" type="reset"><i class="fa fa-trash"></i> delete</button>
+              </div>
+            </form>
+              {%endfor%}
             <ul class="pagination">
               {% if page_obj.has_previous %}
               <li><a href=" {%urlparams%} &page={{page_obj.previous_page_number }}">&laquo;</a></li>
@@ -165,8 +142,6 @@
             </div>
           </div>
         </div>
-      </form>
-      <!-- end form-->
     </div>
     <!-- end content-->
     <!-- start navbar-->
@@ -192,7 +167,7 @@
     </nav>
     <!-- end navbar-->
     <!-- start scripts-->
-    <script>
+    <!-- <script>
       let text = '{%urlparams%}'.split('&')
       res = {}
       for (i of text){
@@ -207,7 +182,7 @@
       document.getElementById('pay').value = res['amp;paymentAmount']
       document.getElementById('deppaydate').value = res['amp;DepPayDate']
       document.getElementById('details').value = res['amp;details']
-    </script>
+    </script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/843d6783ff.js" crossorigin="anonymous"> </script>
     {% if success %}
