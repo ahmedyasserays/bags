@@ -109,7 +109,9 @@
             </div>
             <div> 
               <button class="btn btn-warning" type="submit"><i class="fa fa-save"></i> upload item</button>
-              <button class="btn btn-outline-secondary" type="button" onClick="getName()"><i class="fa fa-search"></i> find</button>
+              <a href="{% url 'find_document'%}">
+                <button class="btn btn-outline-secondary" type="button" onClick="getName()"><i class="fa fa-search"></i> find</button>
+              </a>
             </div>
           </div>
         </div>

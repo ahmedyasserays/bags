@@ -86,9 +86,24 @@ WSGI_APPLICATION = 'bags.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
-}
 
+    'default': {
+
+        'ENGINE': 'django.db.backends.postgresql',
+
+        'NAME': '',
+
+        'USER': '<db_username>',
+
+        'PASSWORD': '<password>',
+
+        'HOST': '<db_host>',
+
+        'PORT': '<db_port>',
+
+    }
+
+}
 
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
